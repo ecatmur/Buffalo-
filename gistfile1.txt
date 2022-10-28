@@ -1,0 +1,16 @@
+S: v! - increment the accumulator
+S: vN! - copy register N to the accumulator
+S: vN? - copy the accumulator to register N
+S: Nv. - swap the program counter with register N
+S: NvN'. - copy register N to register N'
+N: n
+N: an
+N: NNv
+I/O is mapped to register "buffalo" ('n'), either as binary or as Unicode.
+After tokenization, all tokens that are not Buffalo, buffalo, ! ? or . are stripped, then empty sentences are removed.
+pc, acc and all registers are initially zero.
+If the sentence is invalid (e.g. "Buffalo.", "buffalo!", "buffalo"), or if execution reaches the end, the program halts.
+Otherwise, increment pc, then order the K valid interpretations; the instruction at accumulator modulo K is executed.
+Ordering is by initial of part of speech: a < n < v.
+At the start of a sentence, 'a', 'n', 'v' are all capitalized; elsewhere only 'a' is.
+For example, "anvn." and "nnvv." are both written as "Buffalo buffalo buffalo buffalo.", but "nvan." is written "Buffalo buffalo Buffalo buffalo.".

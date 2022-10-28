@@ -1,0 +1,36 @@
+A truth-machine is a simple program type, devised by User:Keymaker to be a program that is easy, most of the time, to implement in a language, and useful for testing or showcasing the following capabilities of a language:
+
+input
+output
+decision
+repetition
+termination
+Essentially, a truth-machine works like this:
+
+At start,
+vnnv! -- copy nnv to acc
+v! -- ++acc
+vananan? -- ananan <- acc
+vnnnvv? -- nnnvv <- acc
+van! -- copy an to acc.
+anvnnv. | nnnvvv. -- jump back to target
+
+Ask for input.
+- with binary I/O, we can write "Buffalo buffalo!" to read a bit from memory-mapped I/O into the accumulator.
+- at this point, acc is 0 or 1, and all named registers are zero.
+- "Buffalo Buffalo buffalo?" copies acc to register 'an'.
+anvn.|nnvv. outputs an if acc is 0, otherwise it swaps pc with 'nnv', jumping to the start.
+a. to halt.
+jump target (in ananan):
+vanan! - zero acc
+v! - ++acc
+vn? - output acc
+anananvanananan. anananan <- ananan
+ananananv. jump to target
+
+If the input is 0: 
+Output 0.
+Terminate program.
+Whereas if the input is 1:
+Repeat infinitely:
+Output 1.
