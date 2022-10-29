@@ -7,7 +7,15 @@ repetition
 termination
 Essentially, a truth-machine works like this:
 
-At start,
+Ask for input;
+If the input is 0: 
+Output 0;
+Terminate program;
+Whereas if the input is 1:
+Repeat infinitely:
+Output 1;
+
+Gadget @0:
 vnnv! -- copy nnv to acc
 v! -- ++acc
 vananan? -- ananan <- acc
@@ -15,7 +23,6 @@ vnnnvv? -- nnnvv <- acc
 van! -- copy an to acc.
 anvnnv. | nnnvvv. -- jump back to target
 
-Ask for input.
 - with binary I/O, we can write "Buffalo buffalo!" to read a bit from memory-mapped I/O into the accumulator.
 - at this point, acc is 0 or 1, and all named registers are zero.
 - "Buffalo Buffalo buffalo?" copies acc to register 'an'.
@@ -28,9 +35,3 @@ vn? - output acc
 anananvanananan. anananan <- ananan
 ananananv. jump to target
 
-If the input is 0: 
-Output 0.
-Terminate program.
-Whereas if the input is 1:
-Repeat infinitely:
-Output 1.

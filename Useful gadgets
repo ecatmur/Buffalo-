@@ -1,0 +1,12 @@
+S: Nv. - swap the program counter (after incrementing) with register N
+S: NvN'. - copy register N to N', then decrement N.
+N: n
+N: an
+N: NNv
+
+n I/O register, conventions:
+ananv zero register (DO NOT WRITE)
+
+vananv! // acc=0
+van? anvan. van! // --acc
+vananv! anv.|nvn. goto an (zeroing acc first)
