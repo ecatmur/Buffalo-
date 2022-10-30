@@ -5,7 +5,7 @@ S: Nv. - swap the program counter (after incrementing) with register N
 S: NvN'. - copy register N to N', then decrement N.
 N: n | an | NNv
 After tokenization, all tokens that are not Buffalo, buffalo, ! ? or . are stripped.
-Invalid sentences (including empty sentences) cause a program to be rejected.
+Invalid sentences (including empty sentences) are rejected.
 At the start of a sentence, 'a', 'n', 'v' are all capitalized; elsewhere only 'a' is.
 For example, 'nnvv.' and 'anvn.' are both written as "Bbbb.", but 'nvan.' is written "BbBb.".
 "bbbbb" names two distinct registers ('nnnvv' and 'nnvnv')!
