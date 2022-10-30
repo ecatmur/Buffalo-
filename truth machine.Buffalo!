@@ -22,7 +22,7 @@ BbBbbbb! v! v! v! v! v! v! v! BbBbbbb? v! BBbbbbb.
 // START PROGRAM
 vnnv! vnanvnv? v! v! v! vnannvv? // set nanvnv=0, nannvv=3
 vn! // read a bit from I/O into acc
-nannvvv.|nanvnvv. // jump to nannvv(0->3)/nanvnv(1->0)
+BBbbbbb. // jump to nannvv(0->3)/nanvnv(1->0)
 // 3 jumps back here, address in nanv
 vnnv! v! vn? // output 1
 vnanv! van? vnnv! anv. // jump back to nanv
