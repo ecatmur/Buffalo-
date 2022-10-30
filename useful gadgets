@@ -1,12 +1,14 @@
-S: Nv. - swap the program counter (after incrementing) with register N
-S: NvN'. - copy register N to N', then decrement N.
-N: n
-N: an
-N: NNv
-
 n I/O register, conventions:
-ananv zero register (DO NOT WRITE)
+an scratch register
+nnv zero register (DO NOT WRITE)
 
-vananv! // acc=0
+[0] GADGET: return to nannvv (acc == 0)
+BBbbbbb.
+[1] GADGET: return to nanvnv + k (acc > 0)
+BbBbbbb! v! * k BbBbbbb? v! BBbbbbb.
+
+vnnv! // acc=0
 van? anvan. van! // --acc
-vananv! anv.|nvn. goto an (zeroing acc first)
+vnnv! anv.|nvn. // goto an (zeroing acc first)
+
+van? vnnv! vnanvnv? v! vnannvv? van! nannvvv.|nanvnvv. 

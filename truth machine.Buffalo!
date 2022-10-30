@@ -15,23 +15,16 @@ Whereas if the input is 1:
 Repeat infinitely:
 Output 1;
 
-Gadget @0:
-vnnv! -- copy nnv to acc
-v! -- ++acc
-vananan? -- ananan <- acc
-vnnnvv? -- nnnvv <- acc
-van! -- copy an to acc.
-anvnnv. | nnnvvv. -- jump back to target
-
-- with binary I/O, we can write "Buffalo buffalo!" to read a bit from memory-mapped I/O into the accumulator.
-- at this point, acc is 0 or 1, and all named registers are zero.
-- "Buffalo Buffalo buffalo?" copies acc to register 'an'.
-anvn.|nnvv. outputs an if acc is 0, otherwise it swaps pc with 'nnv', jumping to the start.
-a. to halt.
-jump target (in ananan):
-vanan! - zero acc
-v! - ++acc
-vn? - output acc
-anananvanananan. anananan <- ananan
-ananananv. jump to target
-
+// [0] GADGET: return to nanvnv (acc > 0), saving address into nanv
+vnanvnv! vnanv? BBbbbbb.
+// [3] GADGET: return to nannvv + 7 (acc == 0 on entry, >0 on exit)
+BbBbbbb! v! v! v! v! v! v! v! BbBbbbb? v! BBbbbbb.
+// START PROGRAM
+vnnv! vnanvnv? v! v! v! vnannvv? // set nanvnv=0, nannvv=3
+vn! // read a bit from I/O into acc
+nannvvv.|nanvnvv. // jump to nannvv(0->3)/nanvnv(1->0)
+// 3 jumps back here, address in nanv
+vnnv! v! vn? // output 1
+vnanv! van? vnnv! anv. // jump back to nanv
+// + 7 insns
+vnnv! vn? // output 0
