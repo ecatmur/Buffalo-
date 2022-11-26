@@ -1,4 +1,7 @@
+import argparse
 import sys
+
+args = argparse.Namespace()
 
 def case(s):
     return 'B' + ''.join({'a':'B','n':'b','v':'b','B':'B','b':'b'}[c] for c in s[1:])
@@ -47,28 +50,33 @@ def parse(f):
             yield s
             s = ''
 
-def main(argv):
+def run(path):
     #for s in sentences(open(argv[1])):
     #    print(' '.join(c + 'uffalo' for c in case(s[:-1])) + s[-1])
-    program = [compile_(s) for s in parse(open(argv[1]))]
+    program = [compile_(s) for s in parse(open(path))]
     pc = 0
     acc = 0
     reg = {}
     def load(r):
         if r == 'n':
-            return int(input("Buffalo? "))
+            return ord(sys.stdin.read(1))
+        elif r == 'an':
+            return int(input("Buffalo Buffalo buffalo? "))
         else:
             return reg.get(r, 0)
     def store(r, x):
         if r == 'n':
-            print(f"Buffalo! {x}")
+            sys.stdout.write(chr(x))
+        elif r == 'an':
+            print(f"Buffalo Buffalo buffalo! {x}")
         else:
             reg[r] = x
     while True:
         if pc >= len(program):
             break
         pp = program[pc]
-        # print(pc, pp, acc, reg)
+        if args.trace:
+            print(pc, pp, acc, reg)
         pc += 1
         p = pp[min(acc, len(pp) - 1)]
         if p == 'v!':
@@ -79,7 +87,8 @@ def main(argv):
             store(p[1:-1], acc)
         elif p[-1] == '^':
             tmp, pc = pc, load(p[:-2])
-            # print(f"jump to {p[:-2]}")
+            if args.trace:
+                print(f"jump to {p[:-2]}: {pc}<->{tmp}")
             store(p[:-2], tmp)
         else:
             j = 0
@@ -91,5 +100,13 @@ def main(argv):
             store(p[i+1:-1], k)
             store(p[:i-1], max(k-1, 0))
 
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("script")
+    parser.add_argument("--trace", action='store_true')
+    parser.parse_args(namespace=args)
+    run(args.script)
+
 if __name__ == "__main__":
-    main(sys.argv)
+    main()
