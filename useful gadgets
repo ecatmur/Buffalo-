@@ -13,9 +13,7 @@ nanvv. // goto nanv
 vnnv! vnannvv! vnanv? vnnv! nannvvv.
 [5] J+K: jump to nanvnv + K, storing address in nanv
 v! vnanvnv! v! * K vnanvnv? vnanv? v! nanvnvv.
-// LABEL: stores address in nanv
-vnnv! vnanvnv? nannvvv.
-// JUMP: forward K, stores address in nanv
-vnnv! v! v! v! v! v! vnannvv? nannvvv.
-// IF/THEN: if acc > 0, jump forward K; stores address in nanv
+// LABEL: stores address in nanv and acc
+vnnv! vnanvnv? nannvvv. vnanv!
+// IF/THEN: if acc > 0, jump forward K; stores either address in nanv
 vnanv? vnnv! vnanvnv? v! v! v! v! v! vnannvv? vnanv! nannvvv.
