@@ -1,14 +1,21 @@
 n I/O register
 an I/O register
 nnv zero register (DO NOT WRITE)
-
-[0] GADGET: return to nannvv (acc == 0)
-BBbbbbb.
-[1] GADGET: return to nanvnv + k (acc > 0)
-BbBbbbb! v! * k BbBbbbb? v! BBbbbbb.
+nanv scratch register
+nannvv/nanvnv jump registers (acc=0/acc>0)
 
 vnnv! // acc=0
-van? anvan. van! // --acc
-vnnv! anv.|nvn. // goto an (zeroing acc first)
+vnanv? nanvvnanv. vnanv! // --acc
+nanvv. // goto nanv
 
-van? vnnv! vnanvnv? v! vnannvv? van! nannvvv.|nanvnvv. 
+// CONTROL FLOW
+[0] J+0: jump to nannvv, storing address in nanv
+vnnv! vnannvv! vnanv? vnnv! nannvvv.
+[5] J+K: jump to nanvnv + K, storing address in nanv
+v! vnanvnv! v! * K vnanvnv? vnanv? v! nanvnvv.
+// LABEL: stores address in nanv
+vnnv! nannvvv.
+// JUMP: forward K, stores address in nanv
+v! nannvvv.
+// IF/THEN: if acc > 0, jump forward K; stores address in nanv
+vnanv? vnnv! vnanvnv? v! v! v! v! v! vnannvv? vnanv! nannvvv.
