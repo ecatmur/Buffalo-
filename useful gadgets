@@ -3,6 +3,7 @@ an I/O register
 nnv zero register (DO NOT WRITE)
 nanv scratch register
 nannvv/nanvnv jump registers (acc=0/acc>0)
+an(an)^k(v)^k data registers
 
 vnnv! // acc=0
 vnanv? nanvvnanv. vnanv! // --acc
