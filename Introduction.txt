@@ -10,7 +10,7 @@ At the start of a sentence, 'a', 'n', 'v' are all capitalized; elsewhere only 'a
 For example, 'nnvv.' and 'anvn.' are both written as "Bbbb.", but 'nvan.' is written "BbBb.".
 "bbbbb" names two distinct registers ('nnnvv' and 'nnvnv')!
 pc, acc and all registers are initially zero.
-I/O is mapped to register "b" ('n'), either as binary or as Unicode.
+I/O is mapped to registers 'n' for numeric and 'an' for Unicode.
 Loop: read the sentence at pc, then increment pc.
 Order the K valid interpretations as they are produced by the grammar L-R; execute the instruction at min(acc, K - 1).
 The program halts when it reaches the end.

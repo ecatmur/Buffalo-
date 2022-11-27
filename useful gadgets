@@ -1,5 +1,5 @@
-n I/O register, conventions:
-an scratch register
+n I/O register
+an I/O register
 nnv zero register (DO NOT WRITE)
 
 [0] GADGET: return to nannvv (acc == 0)
