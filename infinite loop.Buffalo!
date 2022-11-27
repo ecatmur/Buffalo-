@@ -1,5 +1,3 @@
-This program is an infinite loop, written in Buffalo! // [0] ++acc@0
-Buffalo! programs often look like this. // [1] ++acc@1
-Buffalo Buffalo buffalo? // [2] acc@2>an
-Still, Buffalo buffalo buffalo buffalo! // [3] nnv@0>acc
-Nevertheless, Buffalo buffalo buffalo. // [4] (anv.|nvn.)[0] an@2 <-> pc@5
+Buffalo Buffalo buffalo buffalo buffalo! // [0] anvv=0->acc
+Buffalo buffalo buffalo buffalo? // [1] acc=0->nnv
+Buffalo buffalo buffalo buffalo. // [2] (nnvv.|anvn.)[0] nnv=0<->pc=3
