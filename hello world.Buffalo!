@@ -10,7 +10,7 @@ Buffalo buffalo buffalo buffalo!
 Buffalo buffalo Buffalo buffalo buffalo buffalo buffalo?
 Buffalo Buffalo buffalo buffalo buffalo buffalo buffalo.
 Buffalo buffalo Buffalo buffalo buffalo!
-Buffalo Buffalo buffalo Buffalo buffalo buffalo?
+Buffalo Buffalo buffalo Buffalo buffalo buffalo? // 32
 
 Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo!
 Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo!
@@ -19,7 +19,7 @@ Buffalo buffalo buffalo buffalo!
 Buffalo buffalo Buffalo buffalo buffalo buffalo buffalo?
 Buffalo Buffalo buffalo buffalo buffalo buffalo buffalo.
 Buffalo buffalo Buffalo buffalo buffalo!
-Buffalo Buffalo buffalo Buffalo buffalo Buffalo buffalo buffalo buffalo?
+Buffalo Buffalo buffalo Buffalo buffalo Buffalo buffalo buffalo buffalo? // 64
 
 Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo!
 Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo!
@@ -28,7 +28,7 @@ Buffalo buffalo buffalo buffalo!
 Buffalo buffalo Buffalo buffalo buffalo buffalo buffalo?
 Buffalo Buffalo buffalo buffalo buffalo buffalo buffalo.
 Buffalo buffalo Buffalo buffalo buffalo!
-Buffalo Buffalo buffalo Buffalo buffalo Buffalo buffalo Buffalo buffalo buffalo buffalo buffalo?
+Buffalo Buffalo buffalo Buffalo buffalo Buffalo buffalo Buffalo buffalo buffalo buffalo buffalo? // 96
 
 Buffalo Buffalo buffalo Buffalo buffalo Buffalo buffalo buffalo buffalo!
 Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo buffalo?
