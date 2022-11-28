@@ -1,18 +1,18 @@
 def bottle
     if num_bottles
         set dividend num_bottles
-        set divisor 10
         set quotient 0
         set remainder 0
-        set x divisor
+        set divisor 10
+        inc dividend
         label divrem
         dec dividend
-        dec x
-        inc remainder
+        dec divisor
         if dividend
-            if x
+            if divisor
+                inc remainder
                 goto divrem
-            set x divisor
+            set divisor 10
             inc quotient
             set remainder 0
             goto divrem
@@ -21,6 +21,11 @@ def bottle
             write quotient
         inc remainder 48
         write remainder
+        print  bottle
+        set x num_bottles
+        dec x
+        if x
+            print s
     else
         print No bottles
 set num_bottles 99

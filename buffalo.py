@@ -13,30 +13,37 @@ def case(s):
 def decompile(s):
     return ' '.join(c + 'uffalo' for c in case(s[:-1])) + s[-1]
 
-def m2(t, n):
-    if len(t) > n:
-        return
-    elif len(t) == n:
-        yield ''.join({'N':'n'}.get(c, c) for c in t)
-    else:
-        i = t.find('N')
-        if i != -1:
-            yield from m2(t[:i] + 'n' + t[i+1:], n)
-            yield from m2(t[:i] + 'an' + t[i+1:], n)
-            yield from m2(t[:i] + 'NNv' + t[i+1:], n)
-
 @functools.cache
 def match(t, s):
-    return [y for y in m2(t, len(s)) if case(y) == s]
+    n = len(s)
+    if len(t) > n:
+        return []
+    elif len(t) == n:
+        y = ''.join({'N':'n'}.get(c, c) for c in t)
+        return [y] if case(y) == s else []
+    if n % 3 == 0:
+        m = n // 3
+        if t == 'vN' and s == 'B' + 'Bb' * m + 'b' * (m - 1):
+            return ['v' + 'an' * m + 'v' * (m - 1)]
+        if t == 'Nv' and s == 'Bb' * m + 'b' * m:
+            return ['an' * m + 'v' * m]
+    i = t.find('N')
+    if i == -1 or case(t[:i]) != case(s[:i]):
+        return []
+    r = []
+    r += match(t[:i] + 'n' + t[i+1:], s)
+    r += match(t[:i] + 'an' + t[i+1:], s)
+    r += match(t[:i] + 'NNv' + t[i+1:], s)
+    return r
 
-@functools.cache
 def compile_(s):
     x = case(s[:-1])
-    l = ([m + s[-1] for m in match('v', x)] if s[-1] == '!' and len(s) == 2 else
-        [m + s[-1] for m in match('vN', x)] if s[-1] in '!?' else
-        [m + '^' for m in match('Nv', x)] + [m + '-' for m in match('NvN', x)] if s[-1] == '.' else
-        None)
-    return l
+    if s[-1] == '!' and len(s) == 2:
+        return [m + s[-1] for m in match('v', x)]
+    elif s[-1] in '!?':
+        return [m + s[-1] for m in match('vN', x)]
+    elif s[-1] == '.':
+        return [m + '^' for m in match('Nv', x)] + [m + '-' for m in match('NvN', x)]
 
 def sentences(f):
     lines = f.readlines()
@@ -138,21 +145,20 @@ def transpile(path):
         if name:
             return_reg = next_register()
             insns.extend(f"""
-vnnv! vnanv! v{return_reg}? vnannvv? nannvvv. nanvvnanv. nanvvnanv. nanvvnanv. nanvvnanv. nanvvnanv. vnanv! v{name}?
+vnnv! vnanv! v{return_reg}? vnnv! vnannvv? nannvvv. nanvvnanv. nanvvnanv. nanvvnanv. nanvvnanv. nanvvnanv. vnanv! v{name}?
 vananv! vnanv? vnnv! vnanvnv? v! v! v! v! v! vnannvv? vnanv! nannvvv.
 vannv! vnanv? nanvv. v! v! v! v! v! v! v! v!
             """.strip().split())
         for op, *args in ops:
             if op == 'input':
-                reg = get_register(*args)
-                insns.extend(['van!', f'v{reg}?'])
+                arg, = args
+                insns.extend(['van!', f'v{arg}?'])
             elif op == 'output':
                 arg, = args
                 if isinstance(arg, int):
                     insns.extend(set_acc(arg) + ['van?'])
                 else:
-                    reg = get_register(*args)
-                    insns.extend([f'v{reg}!', 'van?'])
+                    insns.extend([f'v{arg}!', 'van?'])
             elif op == 'if':
                 if len(args) == 2:
                     p, q = args
@@ -173,6 +179,29 @@ vannv! vnanv? nanvv. v! v! v! v! v! v! v! v!
                 insns.extend(f"vnnv! vnannvv? nannvvv. nanvvnanv. nanvvnanv. nanvvnanv. vnanv! v{r}?".split())
             elif op == 'goto':
                 insns.extend(goto(*args))
+            elif op == 'set':
+                q, r = args
+                if isinstance(r, int):
+                    insns.extend(set_acc(r) + [f"v{q}?"])
+                else:
+                    insns.extend(f"v{r}! v{q}?".split())
+            elif op == 'print':
+                s, = args
+                for c in s:
+                    insns.extend(set_acc(ord(c)) + ['vn?'])
+            elif op == 'dec':
+                arg, = args
+                insns.extend(f"v{arg}! vnanv? nanvvnanv. vnanv! v{arg}?".split())
+            elif op == 'inc':
+                if len(args) == 1:
+                    arg, = args
+                    n = 1
+                else:
+                    arg, n = args
+                insns.extend([f"v{arg}!"] + ["v!"] * n + [f"v{arg}?"])
+            elif op == 'write':
+                arg, = args
+                insns.extend(f"v{arg}! vn?".split())
             else:
                 raise NotImplementedError(op, args)
         if name:
@@ -183,13 +212,13 @@ vannv! vnanv? nanvv. v! v! v! v! v! v! v! v!
 vnnv! vnannvv! vnanv? vnnv! nannvvv.
 v! vnanvnv! v! v! v! v! v! v! v! v! v! v! v! vnanvnv? vnanv? v! nanvnvv.
     """.strip().split()
-    L = max(len(insns) - 27 for name, insns in subroutines.items() if name)
+    L = max((len(insns) - 28 for name, insns in subroutines.items() if name), default=3)
     program.extend(["vnanv!"] + ["v!"] * L + "vnanv? v! nanvv. v! vnanvnv! vannv?".split())
     program.extend("vnnv! vananv?".split())
     for name, insns in subroutines.items():
         if name:
             program.extend(insns)
-            program.extend(["v!"] * (L - (len(insns) - 27)))
+            program.extend(["v!"] * (L - (len(insns) - 28)))
     program.extend("vnnv! v! vananv?".split())
     program.extend(subroutines[""])
     with open(basename + '.Buffalo!', 'w') as f:

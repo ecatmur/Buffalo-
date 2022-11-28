@@ -18,7 +18,7 @@ vnnv! vnannvv? nannvvv. nanvvnanv. nanvvnanv. nanvvnanv. vnanv! v$r?
 // GOTO(r): jumps to $r, without altering it, potentially returning (uses nanv as jump register)
 vnnv! v$r! vnanv? vnnv! nanvv.
 // DEF(r, s): stores address in $r, return address in $s, then jumps forward L if execute flag is not set
-    vnnv! vnanv! v$s? vnannvv? nannvvv. nanvvnanv. nanvvnanv. nanvvnanv. nanvvnanv. nanvvnanv. vnanv! v$r?  // LABEL(r)
+    vnnv! vnanv! v$s? vnnv! vnannvv? nannvvv. nanvvnanv. nanvvnanv. nanvvnanv. nanvvnanv. nanvvnanv. vnanv! v$r?  // LABEL(r)
     vananv! vnanv? vnnv! vnanvnv? v! v! v! v! v! vnannvv? vnanv! nannvvv.  // IF(running)
     vannv! vnanv? nanvv. v! v! v! v! v! v! v! v!  // JMP annv to jump forward L
 // IF(p, q): if p, goto q, returning to after
