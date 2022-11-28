@@ -1,0 +1,49 @@
+n I/O register (numeric)
+an I/O register (Unicode)
+nnv zero register (DO NOT WRITE)
+nanv scratch register, jump register
+annv DEF register (J+L)
+nannvv/nanvnv IF registers (acc=0/acc>0)
+ananv running flag (0 initially, 1 thereafter)
+an(an)^k(v)^k label/data registers
+
+vnnv! // acc=0
+vnanv? nanvvnanv. vnanv! // --acc
+nanvv. // goto nanv
+
+// IF: if acc > 0, jump forward K; stores either address in nanv
+vnanv? vnnv! vnanvnv? v! v! v! v! v! vnannvv? vnanv! nannvvv.
+// LABEL(r): stores address in $r
+vnnv! vnannvv? nannvvv. nanvvnanv. nanvvnanv. nanvvnanv. vnanv! v$r?
+// GOTO(r): jumps to $r, without altering it, potentially returning (uses nanv as jump register)
+vnnv! v$r! vnanv? vnnv! nanvv.
+// DEF(r, s): stores address in $r, return address in $s, then jumps forward L if execute flag is not set
+    vnnv! vnanv! v$s? vnannvv? nannvvv. nanvvnanv. nanvvnanv. nanvvnanv. nanvvnanv. nanvvnanv. vnanv! v$r?  // LABEL(r)
+    vananv! vnanv? vnnv! vnanvnv? v! v! v! v! v! vnannvv? vnanv! nannvvv.  // IF(running)
+    vannv! vnanv? nanvv. v! v! v! v! v! v! v! v!  // JMP annv to jump forward L
+// IF(p, q): if p, goto q, returning to after
+    vnnv! vnanvnv? v! v! v! v! v! vnannvv? v$p! nannvvv.  // IF(p)
+    v! v! nannvvv. v! v! v! v! v! v! v! v!
+    v$q! vnanv? nanvv.
+// IF(p, q, r): if p, goto q else goto r, returning to after
+    vnnv! vnanvnv? v! v! v! v! v! vnannvv? v$p! nannvvv.  // IF(p)
+    v$r! vnanv? nanvv. vnnv! v! v! v! v! v! vnannvv? nannvvv.
+    v$q! vnanv? nanvv. v! v! v! v! v! v! v! v!
+
+// PROLOG
+[0] J+0: jump to nannvv, storing address in nanv
+vnnv! vnannvv! vnanv? vnnv! nannvvv.
+[5] J+K: jump to nanvnv + K, storing address in nanv (K = 11)
+v! vnanvnv! v! * K vnanvnv? vnanv? v! nanvnvv.
+[annv] J+L: jump to nanv + L (L >= 3)
+vnanv! v! * L vnanv? v! nanvv. v! vnanvnv! vannv?
+
+// CLEAR RUNNING FLAG
+vnnv! vananv?
+
+// SUBROUTINES here
+
+// SET RUNNING FLAG
+vnnv! v! vananv?
+
+// PROGRAM BEGIN

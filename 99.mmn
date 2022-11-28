@@ -1,0 +1,37 @@
+def bottle
+    if num_bottles
+        set dividend num_bottles
+        set divisor 10
+        set quotient 0
+        set remainder 0
+        set x divisor
+        label divrem
+        dec dividend
+        dec x
+        inc remainder
+        if dividend
+            if x
+                goto divrem
+            set x divisor
+            inc quotient
+            set remainder 0
+            goto divrem
+        if quotient
+            inc quotient 48
+            write quotient
+        inc remainder 48
+        write remainder
+    else
+        print No bottles
+set num_bottles 99
+label verse
+goto bottle
+print  of beer on the wall,\n
+goto bottle
+print  of beer.\nTake one down, pass it around,\n
+dec num_bottles
+goto bottle
+print  of beer on the wall.\n
+if num_bottles
+    print \n
+    goto verse

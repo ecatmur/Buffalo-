@@ -8,7 +8,7 @@ termination
 Essentially, a truth-machine works like this:
 
 Ask for input;
-If the input is 0: 
+If the input is 0:
 Output 0;
 Terminate program;
 Whereas if the input is 1:
@@ -16,29 +16,34 @@ Repeat infinitely:
 Output 1;
 
 
-[0] GADGET: return to nannvv (acc == 0), saving address into nanv
-vnanvnv! vnanv? vnnv! BBbbbbb.
-Buffalo buffalo Buffalo buffalo buffalo buffalo buffalo! Buffalo buffalo Buffalo buffalo buffalo? Buffalo buffalo
-buffalo buffalo! Buffalo Buffalo buffalo buffalo buffalo buffalo buffalo.
-[4] GADGET: return to nanvnv + 7 (acc > 0), saving that address into nanv
-BbBbbbb! v! v! v! v! v! v! v! BbBbbbb? vnanv? v! BBbbbbb.
-Buffalo buffalo Buffalo buffalo buffalo buffalo buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo!
-Buffalo buffalo Buffalo buffalo buffalo buffalo buffalo? Buffalo buffalo Buffalo buffalo buffalo? Buffalo! Buffalo
-Buffalo buffalo buffalo buffalo buffalo buffalo.
+[0] GADGET: return to nannvv, saving address into nanv
+vnnv! vnannvv! vnanv? vnnv! nannvvv.
+Buffalo buffalo buffalo buffalo! Buffalo buffalo Buffalo buffalo buffalo buffalo buffalo! Buffalo buffalo Buffalo
+buffalo buffalo? Buffalo buffalo buffalo buffalo! Buffalo Buffalo buffalo buffalo buffalo buffalo buffalo.
+[5] GADGET: return to nanvnv + 7, saving that address into nanv
+v! vnanvnv! v! v! v! v! v! v! v! vnanvnv? vnanv? v! nanvnvv.
+Buffalo! Buffalo buffalo Buffalo buffalo buffalo buffalo buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo!
+Buffalo! Buffalo! Buffalo buffalo Buffalo buffalo buffalo buffalo buffalo? Buffalo buffalo Buffalo buffalo buffalo?
+Buffalo! Buffalo Buffalo buffalo buffalo buffalo buffalo buffalo.
+vnnv! vnannvv? v! v! v! v! v! vnanvnv? // set nannvv=0, nanvnv=5
+Buffalo buffalo buffalo buffalo! Buffalo buffalo Buffalo buffalo buffalo buffalo buffalo?
+Buffalo! Buffalo! Buffalo! Buffalo! Buffalo! Buffalo buffalo Buffalo buffalo buffalo buffalo buffalo?
+
 START PROGRAM
-vnnv! vnannvv? v! v! v! v! vnanvnv? // set nannvv=0, nanvnv=4
-Buffalo buffalo buffalo buffalo! Buffalo buffalo Buffalo buffalo buffalo buffalo buffalo? Buffalo! Buffalo! Buffalo!
-Buffalo! Buffalo buffalo Buffalo buffalo buffalo buffalo buffalo?
 van! // read a number from I/O into acc
 Buffalo Buffalo buffalo!
-BBbbbbb. // jump to nannvv(0->0)/nanvnv(1->4)
+BBbbbbb. // jump to nannvv(0->0)/nanvnv(1->5)
 Buffalo Buffalo buffalo buffalo buffalo buffalo buffalo.
+
 0 jumps here, address in nanv
 vnnv! van? // output 0
 Buffalo buffalo buffalo buffalo! Buffalo Buffalo buffalo?
-v! v! v! v! BBbbbbb. // jump to nanvnv (padding)
-Buffalo! Buffalo! Buffalo! Buffalo! Buffalo Buffalo buffalo buffalo buffalo buffalo buffalo.
-forward jump to here (+ 7 insns), address in nanv
+v! v! v! v! // padding
+Buffalo! Buffalo! Buffalo! Buffalo!
+BBbbbbb. // jump to nanvnv=5, which then returns forward +7 insns to EOF (terminate)
+Buffalo Buffalo buffalo buffalo buffalo buffalo buffalo.
+
+1 jumps forward to here (+ 7 insns), address in nanv
 vnnv! v! van? // output 1
 Buffalo buffalo buffalo buffalo! Buffalo! Buffalo Buffalo buffalo?
 vnanv! vananv? vnnv! ananvv. // jump back to nanv
