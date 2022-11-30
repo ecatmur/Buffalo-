@@ -25,6 +25,8 @@ def match(t, s):
         m = n // 3
         if t == 'vN' and s == 'B' + 'Bb' * m + 'b' * (m - 1):
             return ['v' + 'an' * m + 'v' * (m - 1)]
+        if t == 'vNN' and s == 'B' + 'Bb' * m + 'b' * (m - 1):
+            return []
         if t == 'Nv' and s == 'Bb' * m + 'b' * m:
             return ['an' * m + 'v' * m]
     i = t.find('N')
@@ -38,10 +40,10 @@ def match(t, s):
 
 def compile_(s):
     x = case(s[:-1])
-    if s[-1] == '!' and len(s) == 2:
-        return [m + s[-1] for m in match('v', x)]
-    elif s[-1] in '!?':
-        return [m + s[-1] for m in match('vN', x)]
+    if s[-1] == '!':
+        return [m + '+' for m in match('v', x)] + [m + '<' for m in match('vN', x)]
+    elif s[-1] == '?':
+        return [m + '>' for m in match('vN', x)] + [m + '@' for m in match('vNN', x)]
     elif s[-1] == '.':
         return [m + '^' for m in match('Nv', x)] + [m + '-' for m in match('NvN', x)]
 
@@ -64,15 +66,15 @@ def unpack2(p):
     return p[:i], p[i+1:-1]
 
 def describe(p):
-    if p == 'v!':
+    if p[-1] == '+':
         return "++a"
-    elif p[-1] == '!':
+    elif p[-1] == '<':
         return "a<-" + p[1:-1]
-    elif p[-1] == '?':
+    elif p[-1] == '>':
         return p[1:-1] + "<-a"
     elif p[-1] == '^':
         return "p<->" + p[:-2]
-    else:
+    elif p[-1] == '-':
         p1, p2 = unpack2(p)
         return f"{p2}<-{p1}--"
 
@@ -251,18 +253,18 @@ def evaluate(program):
             print(pc, pp, acc, reg)
         pc += 1
         p = pp[min(acc, len(pp) - 1)]
-        if p == 'v!':
+        if p[-1] == '+':
             acc += 1
-        elif p[-1] == '!':
+        elif p[-1] == '<':
             acc = load(p[1:-1])
-        elif p[-1] == '?':
+        elif p[-1] == '>':
             store(p[1:-1], acc)
         elif p[-1] == '^':
             tmp, pc = pc, load(p[:-2])
             if args.trace:
                 print(f"jump to {p[:-2]}: {pc}<->{tmp}")
             store(p[:-2], tmp)
-        else:
+        elif p[-1] == '-':
             p1, p2 = unpack2(p)
             k = load(p1)
             store(p2, k)
