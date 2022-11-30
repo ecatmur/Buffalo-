@@ -45,17 +45,6 @@ def compile_(s):
     elif s[-1] == '.':
         return [m + '^' for m in match('Nv', x)] + [m + '-' for m in match('NvN', x)]
 
-def sentences(f):
-    lines = f.readlines()
-    for l in lines:
-        i = l.find('//')
-        if i != -1:
-            l = l[:i]
-        l = l.strip()
-        if not l:
-            continue
-        yield from l.split()
-
 def parse(f):
     s = ''
     for w in f.read().split():
