@@ -1,0 +1,20 @@
+n I/O register
+an I/O register
+nnv zero register (DO NOT WRITE)
+nanv scratch register
+nannvv/nanvnv jump registers (acc=0/acc>0)
+an(an)^k(v)^k data registers
+
+vnnv! // acc=0
+vnanv? nanvvnanv. vnanv! // --acc
+nanvv. // goto nanv
+
+// CONTROL FLOW
+[0] J+0: jump to nannvv, storing address in nanv
+vnnv! vnannvv! vnanv? vnnv! nannvvv.
+[5] J+K: jump to nanvnv + K, storing address in nanv
+v! vnanvnv! v! * K vnanvnv? vnanv? v! nanvnvv.
+// LABEL: stores address in nanv and acc
+vnnv! vnanvnv? nannvvv. vnanv!
+// IF/THEN: if acc > 0, jump forward K; stores either address in nanv
+vnanv? vnnv! vnanvnv? v! v! v! v! v! vnannvv? vnanv! nannvvv.
