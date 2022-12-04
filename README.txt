@@ -7,7 +7,7 @@ Also, jump targets are numeric (the program counter) but since the only increasi
 Finally, jumping destroys the jump target (it swaps the jump target register with the program counter); this is useful for obtaining return locations (or even just to get large numbers without having to repeatedly increment the accumulator) but means that if you want to jump to the same target more than once you need to copy the location into a scratch register.
 
 Proof of Turing completeness is by transpilation from a high(er)-level language.
-This exhibits extreme blowup; for example, the 42-line (910 byte) "99 bottles of beer" program transpiles to 18805 lines (229 KB) of Buffalo!.
+This exhibits extreme blowup; for example, the 42-line (910 byte) "99 bottles of beer" program transpiles to 18805 lines (~230 KB) of Buffalo!.
 
 Syntax and semantics
 ====================

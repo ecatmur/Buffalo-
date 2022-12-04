@@ -4,6 +4,7 @@ import functools
 import os.path
 import re
 import sys
+import textwrap
 
 args = argparse.Namespace()
 
@@ -237,8 +238,23 @@ v! nanvvnanvnv. vnanv! v! van! anvnanv. van! v! v! v! v! v! v! nanvnvv.
     if args.trace:
         print(len(program))
     with open(basename + '.Buffalo!', 'w') as f:
-        for s in program:
-            print(unparse(s), file=f)
+        if args.wrap:
+            line = []
+            for s in program:
+                for w in unparse(s).split():
+                    if len(' '.join(line + [w])) <= args.wrap:
+                        line.append(w)
+                        continue
+                    ww, line = line, [w]
+                    x = args.wrap - len(' '.join(ww))
+                    q, r = divmod(x, len(ww) - 1)
+                    for i, w in enumerate(ww):
+                        f.write(' ' * (0 if i == 0 else q + 2 if i <= (r + 1) else q + 1) + w)
+                    f.write('\n')
+            f.write(' '.join(line) + '\n')
+        else:
+            for s in program:
+                print(unparse(s), file=f)
 
 def run(path):
     basename, ext = os.path.splitext(path)
@@ -290,6 +306,7 @@ def main():
     parser.add_argument("--trace", action='store_true')
     parser.add_argument("--compile", action='store_true')
     parser.add_argument("--transpile", action='store_true')
+    parser.add_argument("--wrap", type=int, default=120)
     parser.add_argument("--describe", type=str)
     parser.add_argument("--unparse", type=str)
     parser.add_argument("--execute", type=str)
