@@ -115,7 +115,7 @@ def transpile(path):
                 reg = get_register(arg)
                 if_reg = next_register()
                 ops.append([op, reg, if_reg])
-                stack.append([0, subroutines[if_reg]])
+                stack.append([indent + 1, subroutines[if_reg]])
             elif op == 'else':
                 else_reg = next_register()
                 ops[-1].append(else_reg)
@@ -192,10 +192,10 @@ def transpile(path):
                 insns.extend([f"v{arg}!"] + inc_acc(n) + [f"v{arg}!"])
             elif op == 'read':
                 arg, = argv
-                insns.extend([f"nv{arg}."])
+                insns.extend(f"nvan. van! v{arg}!".split())
             elif op == 'write':
                 arg, = argv
-                insns.extend(inc_acc(1) + [f"{arg}vn."])
+                insns.extend(f"v{arg}! v! van! anvnanv. nanvvnanv. van! v{arg}! nanvvn.".split())
             elif op == 'print':
                 s, = argv
                 for c in s:

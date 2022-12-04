@@ -1,0 +1,105 @@
+def truncate
+    set y x
+    dec y 255
+    if y
+        dec y
+        if y
+        else
+            set x 0
+def increment
+    inc x
+    goto truncate
+def decrement
+    dec x
+def mul
+    set mul_r 0
+    set mul_t mul_x
+    label mul_l
+    if mul_t
+        dec mul_t
+        inc mul_r
+        goto mul_l
+    else
+        dec mul_y
+        if mul_y
+            set mul_t mul_x
+            goto mul_l
+def square
+    set mul_x x
+    set mul_y x
+    goto mul
+    set x mul_r
+    goto truncate
+def div
+    set div_q 0
+    set div_t div_s
+    set div_r 0
+    inc div_d
+    label div_l
+    dec div_d
+    dec div_t
+    if div_d
+        if div_t
+            inc div_r
+            goto div_l
+        set div_t div_s
+        inc div_q
+        set div_r 0
+        goto div_l
+def pow
+    set pow_r 1
+    label pow_l
+    if pow_e
+        dec pow_e
+        set mul_x pow_r
+        set mul_y pow_b
+        goto mul
+        set pow_r mul_r
+        goto pow_l
+def output
+    set y x
+    set d 0
+    label digits
+    set z y
+    dec z 9
+    if z
+        inc d
+        set div_d y
+        set div_s 10
+        goto div
+        set y div_q
+        goto digits
+    set y x
+    label digit
+    set pow_b 10
+    set pow_e d
+    goto pow
+    set div_d y
+    set div_s pow_r
+    goto div
+    inc div_q 48
+    write div_q
+    if d
+        dec d
+        set y div_r
+        goto digit
+    print \n
+label loop
+read c
+if c
+    dec c 48
+    if c
+        dec c 52
+        if c
+            dec c 5
+            if c
+                dec c 6
+                if c
+                    goto square
+                else
+                    goto output
+            else
+                goto increment
+        else
+            goto decrement
+    goto loop
