@@ -1,7 +1,9 @@
 read x
-dec x 48
-if x
-    label loop
-    print 1\n
+set y x
+set z 10
+dec y 48
+label loop
+write x
+write z
+if y
     goto loop
-print 0\n
