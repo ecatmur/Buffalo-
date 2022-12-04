@@ -1,49 +1,64 @@
-n I/O register (numeric)
-an I/O register (Unicode)
+n I/O register
+an transfer register
 nnv zero register (DO NOT WRITE)
-nanv scratch register, jump register
+nanv jump register
 annv DEF register (J+L)
 nannvv/nanvnv IF registers (acc=0/acc>0)
 ananv running flag (0 initially, 1 thereafter)
 an(an)^k(v)^k label/data registers
 
-vnnv! // acc=0
-vnanv? nanvvnanv. vnanv! // --acc
-nanvv. // goto nanv
+v! * N  // acc+=N [N]
+nnvvan. van! v! * N  // acc=N [2 + N]
+van! anvan. * N van! // acc-=N (via an) [2 + N]
 
-// IF: if acc > 0, jump forward K; stores either address in nanv
-vnanv? vnnv! vnanvnv? v! v! v! v! v! vnannvv? vnanv! nannvvv.
-// LABEL(r): stores address in $r
-vnnv! vnannvv? nannvvv. nanvvnanv. nanvvnanv. nanvvnanv. vnanv! v$r?
-// GOTO(r): jumps to $r, without altering it, potentially returning (uses nanv as jump register)
-vnnv! v$r! vnanv? vnnv! nanvv.
+// IF(p): if p > 0, etc.
+    nnvvan. van! vnanvnv!  // nannvv = 0
+    nnvvan. van! v! * N vnannvv!  // nanvnv = N
+    v$r! v! v$r! $rvan. anvan. van!  // acc = $r
+    nannvvv.  // jump to nannvv/nanvnv
+    [¬p branch padded to K with v!]
+    [p branch]
+
+// LABEL(r): stores address in $r (must be anananvv form)
+    nnvvan. van! vnannvv! nnvvan. van!  // nannvv = acc = 0
+    nannvvv.  // jump to nannvv, jumps directly back leaving succeeding pc in nanv
+    nanvvnanv. nanvvnanv. nanvvnanv. nanvvnanv.  // nanv -= 4
+    nanvv$r.  // $r = nanv--
+
+// GOTO(r): jumps to $r, without altering it, potentially returning (uses nanv as jump register) [6]
+    v$r! v! v$r! $rvnanv. nanvvnanv.  // nanv = $r
+    nanvv.
+
 // DEF(r, s): stores address in $r, return address in $s, then jumps forward L if execute flag is not set
-    vnnv! vnanv! v$s? vnnv! vnannvv? nannvvv. nanvvnanv. nanvvnanv. nanvvnanv. nanvvnanv. nanvvnanv. vnanv! v$r?  // LABEL(r)
-    vananv! vnanv? vnnv! vnanvnv? v! v! v! v! v! vnannvv? vnanv! nannvvv.  // IF(running)
-    vannv! vnanv? nanvv. v! v! v! v! v! v! v! v!  // JMP annv to jump forward L
+    RETURN(s)
+    LABEL(r, len(RETURN(s)))
+    IF(ananv)
+    PAD(GOTO(annv), K)
+    [ code ]
 // IF(p, q): if p, goto q, returning to after
-    vnnv! vnanvnv? v! v! v! v! v! vnannvv? v$p! nannvvv.  // IF(p)
-    v! v! nannvvv. v! v! v! v! v! v! v! v!
-    v$q! vnanv? nanvv.
+    IF(p)
+    PAD(len(GOTO(q)), nannvvv., K)
+    GOTO(q)
 // IF(p, q, r): if p, goto q else goto r, returning to after
-    vnnv! vnanvnv? v! v! v! v! v! vnannvv? v$p! nannvvv.  // IF(p)
-    v$r! vnanv? nanvv. vnnv! v! v! v! v! v! vnannvv? nannvvv.
-    v$q! vnanv? nanvv. v! v! v! v! v! v! v! v!
+    IF(p)
+    GOTO(r) acc=N nannvvv! nannvvv.  // K = length of this = 6 + 2 + N + 2 = 10 + N = 21
+    PAD(GOTO(q), K)
 
 // PROLOG
-[0] J+0: jump to nannvv, storing address in nanv
-vnnv! vnannvv! vnanv? vnnv! nannvvv.
-[5] J+K: jump to nanvnv + K, storing address in nanv (K = 11)
-v! vnanvnv! v! * K vnanvnv? vnanv? v! nanvnvv.
-[annv] J+L: jump to nanv + L (L >= 3)
-vnanv! v! * L vnanv? v! nanvv. v! vnanvnv! vannv?
+[0] J+0: jump to nannvv, storing address in nanv (N = 11)
+nnvvan. van! vnannvv!
+vnanv! nnvvan. van! nanvvnannvv. vnanv! v! vnanv! nannvvv.
 
-// CLEAR RUNNING FLAG
-vnnv! vananv?
+[N] J+K: jump to nanvnv + K, storing address in nanv (K = 21)
+v! vnanvnv! v! * K
+vnanv! nnvvan. van! v! nanvvnanvnv. vnanv! v! van! anvnanv. van! v! v! v! nanvnvv.
+
+[annv] J+L: jump to nanv + L (L >= 3)
+vnanv! v! * L vnanv! v! nanvv. v! * L vnanvnv! vannv!
 
 // SUBROUTINES here
 
 // SET RUNNING FLAG
-vnnv! v! vananv?
+v! vananv!
 
 // PROGRAM BEGIN
