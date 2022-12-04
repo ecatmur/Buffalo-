@@ -1,13 +1,13 @@
 Buffalo! is a register machine language based on a linguistics joke.
 
 Although it is Turing-complete, it is designed to be extremely annoying to write, not to mention almost impossible to read, notwithstanding that every Buffalo! program is a valid text in English (the linguistics joke).
-Even *parsing* a Buffalo! program takes exponential time in the length of the longest sentence (the parser cheats by spotting patterns used by the author and the transpiler).
+Even *parsing* a Buffalo! program takes exponential time in sentence length (the parser cheats by spotting patterns used by the author and the transpiler).
 The principal annoyance is that (like English) parsing a Buffalo! program is *ambiguous*, but that ambiguity is used for *conditional branching* (dependent on the value of the accumulator register) so must be employed in any nontrivial program while being avoided anywhere linear control flow is required.
 Also, jump targets are numeric (the program counter) but since the only increasing numeric primitive is to increment the accumulator, jumping forward is quite tricky.
 Finally, jumping destroys the jump target (it swaps the jump target register with the program counter); this is useful for obtaining return locations (or even just to get large numbers without having to repeatedly increment the accumulator) but means that if you want to jump to the same target more than once you need to copy the location into a scratch register.
 
 Proof of Turing completeness is by transpilation from a high(er)-level language.
-This exhibits extreme blowup; for example, the 42-line (910 byte) 99 bottles program transpiles to 18673 lines (228 KB) of Buffalo!.
+This exhibits extreme blowup; for example, the 42-line (910 byte) "99 bottles of beer" program transpiles to 18805 lines (229 KB) of Buffalo!.
 
 Syntax and semantics
 ====================
