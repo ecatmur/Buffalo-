@@ -255,10 +255,9 @@ def evaluate(program):
     pc = acc = 0
     reg = {}
     def get(r):
-        return ord(sys.stdin.read(1)) if r == 'n' else reg.get(r, 0)
+        return ord(sys.stdin.read(1) or '\0') if r == 'n' else reg.get(r, 0)
     def put(r, n):
         if r == 'n':
-            assert n != 0
             sys.stdout.write(chr(n))
         else:
             reg[r] = n
