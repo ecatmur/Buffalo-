@@ -200,8 +200,21 @@ def transpile(path):
                 insns.extend(f"v{arg}! v! van! anvnanv. nanvvnanv. van! v{arg}! nanvvn.".split())
             elif op == 'print':
                 s, = argv
+                insns.extend(set_acc(0) + ['van!'])
+                current = 0
                 for c in s:
-                    insns.extend(set_acc(ord(c)) + ['van!'] + inc_acc(1) + ['anvn.'])
+                    if ord(c) >= current:
+                        if insns[-1] == 'van!':
+                            insns.pop()
+                        else:
+                            insns.append('van!')
+                        insns.extend(inc_acc(ord(c) - current) + ['van!'])
+                    elif ord(c) >= current / 2:
+                        insns.extend(['anvan.'] * (current - ord(c)))
+                    else:
+                        insns.extend(set_acc(ord(c)) + ['van!'])
+                    insns.extend(inc_acc(1) + ['anvn.'])
+                    current = max(ord(c) - 1, 0)
             else:
                 raise NotImplementedError(op, argv)
         if name:
