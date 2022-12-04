@@ -101,6 +101,7 @@ def transpile(path):
         return registers[reg]
     subroutines = collections.defaultdict(list)
     stack = [[0, subroutines['']]]
+    uses_if = False
     with open(path) as f:
         for line in f:
             m = re.match(r'( *)(\w*)(?: ([^\n]*))?\n?', line)
@@ -111,6 +112,7 @@ def transpile(path):
             if not ops:
                 stack[-1][0] = indent
             if op == 'if':
+                uses_if = True
                 arg, = argv
                 reg = get_register(arg)
                 if_reg = next_register()
@@ -206,32 +208,35 @@ def transpile(path):
             insns.extend(goto(return_reg))
         subroutines[name] = insns
 
-    # [0] J+0: jump to nannvv, storing address in nanv (N = 11)
-    program = "nnvvan. van! vnannvv! vnanv! nnvvan. van! nanvvnannvv. vnanv! v! vnanv! nannvvv.".split()
-    assert len(program) == N
+    program = []
+    if uses_if or len(subroutines) > 1:
+        # [0] J+0: jump to nannvv, storing address in nanv (N = 11)
+        program.extend("nnvvan. van! vnannvv! vnanv! nnvvan. van! nanvvnannvv. vnanv! v! vnanv! nannvvv.".split())
+        assert len(program) == N
 
-    # [N] J+K: jump to nanvnv + K, storing address in nanv
-    program.extend("v! vnanvnv!".split() + ["v!"] * K + """vnanv! nnvvan. van!
+        # [N] J+K: jump to nanvnv + K, storing address in nanv
+        program.extend("v! vnanvnv!".split() + ["v!"] * K + """vnanv! nnvvan. van!
 v! nanvvnanvnv. vnanv! v! van! anvnanv. van! v! v! v! v! v! v! nanvnvv.
-    """.strip().split())
+        """.strip().split())
 
-    # [annv] J+L: jump to nanv + L (L >= 3)
-    L = max(3, max((len(insns) - J for name, insns in subroutines.items() if name), default=0))
-    program.extend(["vnanv!"] + ["v!"] * L + "vnanv! v! nanvv.".split() + ["v!"] * L + "vnanvnv! vannv!".split())
+    if len(subroutines) > 1:
+        # [annv] J+L: jump to nanv + L (L >= 3)
+        L = max(3, max((len(insns) - J for name, insns in subroutines.items() if name), default=0))
+        program.extend(["vnanv!"] + ["v!"] * L + "vnanv! v! nanvv.".split() + ["v!"] * L + "vnanvnv! vannv!".split())
 
-    if args.trace:
-        print(L, J, file=sys.stderr)
-    for name, insns in subroutines.items():
-        if name:
-            if args.trace:
-                print(name, len(program), len(insns), (L - (len(insns) - J)), file=sys.stderr)
-            program.extend(insns)
-            program.extend(["v!"] * (L - (len(insns) - J)))
+        if args.trace:
+            print(L, J, file=sys.stderr)
+        for name, insns in subroutines.items():
+            if name:
+                if args.trace:
+                    print(name, len(program), len(insns), (L - (len(insns) - J)), file=sys.stderr)
+                program.extend(insns)
+                program.extend(["v!"] * (L - (len(insns) - J)))
+        # SET RUNNING FLAG
+        if args.trace:
+            print(len(program), file=sys.stderr)
+        program.extend("v! vananv!".split())
 
-    # SET RUNNING FLAG
-    if args.trace:
-        print(len(program), file=sys.stderr)
-    program.extend("v! vananv!".split())
     if args.trace:
         print(len(program), file=sys.stderr)
     program.extend(subroutines[""])
